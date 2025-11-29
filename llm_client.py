@@ -11,7 +11,7 @@ class LLMClient:
     
     def __init__(self):
         self.client = AsyncAnthropic(api_key=config.ANTHROPIC_API_KEY)
-        self.model = "claude-3-haiku-20240307"  # Latest Claude 3.5 Sonnet
+        self.model = "claude-3-haiku-20240307"  # Most basic, widely available model
     
     async def analyze_question(self, question_text: str) -> dict:
         """
@@ -48,6 +48,24 @@ Respond ONLY with valid JSON, no other text."""
             
             response_text = message.content[0].text
             logger.info(f"LLM response: {response_text[:200]}...")
+            
+            # Strip markdown code blocks if present
+            response_text = response_text.strip()
+            if response_text.startswith('```json'):
+                response_text = response_text.replace('```json', '', 1)
+            if response_text.startswith('```'):
+                response_text = response_text.replace('```', '', 1)
+            if response_text.endswith('```'):
+                response_text = response_text.rsplit('```', 1)[0]
+            
+            # Try to extract just the JSON object
+            # Find first { and last }
+            start = response_text.find('{')
+            end = response_text.rfind('}')
+            if start != -1 and end != -1:
+                response_text = response_text[start:end+1]
+            
+            response_text = response_text.strip()
             
             # Parse JSON response
             analysis = json.loads(response_text)
