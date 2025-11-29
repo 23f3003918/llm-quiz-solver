@@ -1,0 +1,41 @@
+# Environment
+.env
+.env.*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+venv/
+ENV/
+env/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Documentation (we need these in the repo but not in Docker)
+*.md
+LICENSE
+
+# Tests
+test.py
+
+# Playwright cache (will be installed fresh in Docker)
+.playwright/
